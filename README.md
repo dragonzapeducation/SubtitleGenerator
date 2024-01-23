@@ -89,7 +89,7 @@ Replace the new command file with the following contents:
 <?php
 
 namespace App\Console\Commands;
-
+use Illuminate\Console\Command;
 use Dragonzap\SubtitleGenerator\SubtitleGeneratingService;
 
 class TestCommand extends Command
