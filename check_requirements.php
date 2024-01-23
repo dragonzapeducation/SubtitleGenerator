@@ -1,13 +1,12 @@
 <?php
  // check_requirements.php
 /**
- * This file ensures the person installing the package meets all system requirements to run it
+ * This file ensures the person installing the package meets all system requirements to run it.
+ * 
+ * Script does not always seem to run
  */
 
 
- exit(1);
-
- 
  if (function_exists('exec')) {
     echo "exec() is enabled proceeding...\n";
 } else {
