@@ -100,6 +100,8 @@ class SubtitleGeneratingService
      */
     public function beginGeneratingSubtitles(string $input_movie_path): string
     {
+        putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $this->credentialsPath);
+
         $localFilePath = $input_movie_path; // Path to your local file
 
         // Create a temporary file name with .wav extension
@@ -137,6 +139,8 @@ class SubtitleGeneratingService
      */
     public function checkSubtitleGenerationOperation(string $operation_id): array
     {
+        putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $this->credentialsPath);
+
         $speech = new SpeechClient([
             'projectId' => $this->projectId,
             'credentials' => $this->credentials,

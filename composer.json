@@ -13,6 +13,11 @@
             "name": "Dragon Zap Publishing"
         }
     ],
+
+    "scripts": {
+        "pre-install-cmd": "php check_requirements.php"
+    },
+
     "require": {
         "laravel/framework": "^9.0|^10.0",
         "google/cloud-speech":"^1.0",
