@@ -148,7 +148,5 @@ class TestCommand extends Command
 }
 ```
 
-In this example subtitles will be generated for the output.mp4 file
+In this example subtitles will be generated for the output.mp4 file. You can store the $operation_id in a database to poll it frequently rather than block to wait for the subtitles to be generated. Large files can take minutes for subtitles to be generated so consider storing the $operation_id in the database to poll frequently until success status is reached.
 
-## Warning
-The subtitle generator is still in development and may not function as expected at this time
