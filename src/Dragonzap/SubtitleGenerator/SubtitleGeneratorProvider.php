@@ -11,6 +11,7 @@
 namespace Dragonzap\SubtitleGenerator;
 
 use Illuminate\Support\ServiceProvider;
+use Dragonzap\SubtitleGenerator\SubtitleGeneratingService;
 
 class SubtitleGeneratorProvider extends ServiceProvider
 {
