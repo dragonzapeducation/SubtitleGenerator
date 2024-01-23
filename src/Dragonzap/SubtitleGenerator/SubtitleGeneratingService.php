@@ -62,10 +62,10 @@ class SubtitleGeneratingService
             
             putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $this->credentialsPath);
         } else {
-            $this->projectId = config('dragonzap.subtitle_generator.google.project_id');
-            $this->credentialsPath = config('dragonzap.subtitle_generator.google.credentials');
-            $this->audioFileTmpDirectory = config('dragonzap.subtitle_generator.google.audio_file_tmp_directory');
-            $this->bucket = config('dragonzap.subtitle_generator.google.bucket');
+            $this->projectId = config('dragonzap_subtitles.subtitle_generator.google.project_id');
+            $this->credentialsPath = config('dragonzap_subtitles.subtitle_generator.google.credentials');
+            $this->audioFileTmpDirectory = config('dragonzap_subtitles.subtitle_generator.google.audio_file_tmp_directory');
+            $this->bucket = config('dragonzap_subtitles.subtitle_generator.google.bucket');
 
             // Validate all are passed
             if (!$this->projectId) {
