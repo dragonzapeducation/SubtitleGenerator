@@ -1,5 +1,5 @@
 # SubtitleGenerator
-PHP library that generates WebVTT subtitles from input video files, requires google cloud bucket and google speech to text API's which can be found at [Google Coud Console](https://console.cloud.google.com).
+PHP library that generates WebVTT subtitles from input video files, requires google cloud bucket and google speech to text API's which can be found at [Google Cloud Console](https://console.cloud.google.com).
 
 ## Using without Laravel framework
 The library can be used with or without Laravel framework. Seek the [test.php](https://github.com/dragonzapeducation/SubtitleGenerator/blob/main/test.php) file for use case without Laravel framework.
