@@ -1,0 +1,26 @@
+{
+    "name": "dragonzap/subtitle-generator",
+    "description": "Provides clean abstraction for the chatgpt assistant API. Build and run assistants with a clean easy to use design",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Dragonzap\\": "src/Dragonzap/"
+        }
+    },    
+    "authors": [
+        {
+            "name": "Dragon Zap Publishing"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^9.0|^10.0",
+        "google/cloud-speech":"^1.0",
+        "google/cloud-storage":"^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
