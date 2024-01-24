@@ -171,13 +171,14 @@ class SubtitleGeneratingService
         $metadata = $operation->info()['metadata'];
 
         // Check if the metadata contains the input URI
-        if (isset($metadata['inputUri'])) {
-            $inputUri = $metadata['inputUri'];
-
+        if (isset($metadata['uri'])) {
+            $inputUri = $metadata['uri'];
+            // We want a uri relative to the bucket so we should replace the gs:// bucket name from the uri
+            $inputUri = str_replace('gs://' . $this->bucket . '/', '', $inputUri);
             // Delete the file from Google Cloud Storage
             $this->deleteFromGoogleStorage($inputUri);
         }
-        
+
         return [
             'status' => 'success',
             'subtitles' => $subtitles,
