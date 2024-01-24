@@ -1,6 +1,6 @@
 {
     "name": "dragonzap/subtitle-generator",
-    "description": "Provides clean abstraction for the chatgpt assistant API. Build and run assistants with a clean easy to use design",
+    "description": "Allows you to generate subtitles for any video file provided. WEBVTT format is supported",
     "type": "library",
     "license": "GPL-2.0-or-later",
     "autoload": {
