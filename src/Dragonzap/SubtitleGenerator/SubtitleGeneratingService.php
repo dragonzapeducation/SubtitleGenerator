@@ -32,7 +32,7 @@ class SubtitleGeneratingService
      * 
      * ]
      */
-    public function __construct(array|null $google_config=null)
+    public function __construct(array|null $google_config = null)
     {
         if ($google_config) {
             // Validate all are passed 
@@ -59,7 +59,7 @@ class SubtitleGeneratingService
             $this->credentials = json_decode(file_get_contents($this->credentialsPath), true);
             $this->audioFileTmpDirectory = $google_config['audio_file_tmp_directory'];
             $this->bucket = $google_config['bucket'];
-            
+
             putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $this->credentialsPath);
         } else {
             $this->projectId = config('dragonzap_subtitles.subtitle_generator.google.project_id');
@@ -108,7 +108,10 @@ class SubtitleGeneratingService
         $tmpFilePath = tempnam(sys_get_temp_dir(), 'audio_') . '.wav';
 
         // Extract audio using ffmpeg
-        $this->extractAudioWithFfmpeg($localFilePath, $tmpFilePath);
+        $success = $this->extractAudioWithFfmpeg($localFilePath, $tmpFilePath);
+        if (!$success) {
+            throw new SubtitleGenerationFailedException("Failed to extract audio from the video file is ffmpeg installed.");
+        }
 
         // Upload the file to Google Cloud Storage
         $gcsUri = $this->uploadToGoogleStorage($tmpFilePath);
@@ -163,6 +166,18 @@ class SubtitleGeneratingService
             throw new SubtitleGenerationFailedException("Failed to get the results of the completed operation.");
         }
         $subtitles = $this->createSubtitles($response);
+
+        // Once the operation is complete, get the metadata
+        $metadata = $operation->info()['metadata'];
+
+        // Check if the metadata contains the input URI
+        if (isset($metadata['inputUri'])) {
+            $inputUri = $metadata['inputUri'];
+
+            // Delete the file from Google Cloud Storage
+            $this->deleteFromGoogleStorage($inputUri);
+        }
+        
         return [
             'status' => 'success',
             'subtitles' => $subtitles,
@@ -182,37 +197,52 @@ class SubtitleGeneratingService
         if (!file_exists($filePath) || !is_readable($filePath)) {
             throw new Exception("File does not exist or is not readable: " . $filePath);
         }
-    
+
         $fileContents = file_get_contents($filePath);
-    
+
         // Generate a unique file name
         $randomFileName = uniqid('audio_', true) . rand(1000, 9999);
         $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
         $targetPath = $this->audioFileTmpDirectory . '/' . $randomFileName . '.' . $fileExtension;
-    
+
         // Initialize Google Cloud Storage client
         $storage = new StorageClient([
             // Provide your Google Cloud credentials here
             'keyFilePath' => $this->credentialsPath
         ]);
-    
+
         // Select your bucket
         $bucket = $storage->bucket($this->bucket);
-    
+
         // Check if the target file already exists in the bucket to avoid overwriting
         if ($bucket->object($targetPath)->exists()) {
             throw new Exception("Target file already exists in the storage: " . $targetPath);
         }
-    
+
         // Upload the file
         $bucket->upload($fileContents, [
             'name' => $targetPath
         ]);
-    
+
         return 'gs://' . $this->bucket . '/' . $targetPath;
     }
 
 
+    private function deleteFromGoogleStorage($gcsUri)
+    {
+        // Initialize Google Cloud Storage client
+        $storage = new StorageClient([
+            // Provide your Google Cloud credentials here
+            'keyFilePath' => $this->credentialsPath
+        ]);
+
+        // Select your bucket
+        $bucket = $storage->bucket($this->bucket);
+
+        // Delete the file
+        $object = $bucket->object($gcsUri);
+        $object->delete();
+    }
 
     private function processAudioFile($gcsUri)
     {
